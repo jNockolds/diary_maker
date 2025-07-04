@@ -2,8 +2,8 @@ import diary_elements
 import existing_diaries
 
 """TODO:
+- Separate match statement into functions to remove some clutter
 - Add a separate folder to store diaries, rather than just one for diaries and existing lists.
-- Add functionality to view all entries in a diary.
 - Add functionality to search entries by tags.
 - Add functionality to search entries by date.
 - Add functionality to remove a diary.
@@ -20,9 +20,15 @@ import existing_diaries
     - Add functionality to import diary entries from a text file.
 """
 
+buffer = "-------------------------"
+
+def print_exit():
+    print(buffer)
+    print("Exiting the diary application.")
+    print(buffer)
+
 def main():
     """Main function to run the diary application."""
-    buffer = "-------------------------"
 
     print(buffer)
     print("Welcome to the Diary Application!")
@@ -47,9 +53,7 @@ def main():
 
                 diary_name = input("Enter the name of the diary you would like to create or add an entry to: ")
                 if diary_name == '-':
-                    print(buffer)
-                    print("Exiting the diary application.")
-                    print(buffer)
+                    print_exit()
                     break
 
                 existing_diaries.add(diary_name) # Won't add if it already exists
@@ -57,20 +61,28 @@ def main():
 
                 content = input("Enter the content of your diary entry: ")
                 if content == '-':
-                    print(buffer)
-                    print("Exiting the diary application.")
-                    print(buffer)
+                    print_exit()
                     break
 
                 tags_input = input("Enter tags (separated by \", \"): ")
                 if tags_input == '-':
-                    print(buffer)
-                    print("Exiting the diary application.")
-                    print(buffer)
+                    print_exit()
                     break
 
-                tags = [tag for tag in tags_input.split(", ")] if tags_input else []
-                entry = diary_elements.DiaryEntry(content, tags)
+                productive_activities_count = input("Enter the number of productive activities worked on: ")
+                if productive_activities_count == '-':
+                    print_exit()
+                    break
+                try:
+                    productive_activities_count = int(productive_activities_count)
+                except ValueError:
+                    print(buffer)
+                    print(f"Please enter a valid non-negative integer.")
+                    continue
+
+
+                tags = [tag.lower() for tag in tags_input.split(", ")] if tags_input else []
+                entry = diary_elements.DiaryEntry(content, tags, productive_activities_count)
                 diary.add_entry(entry)
 
                 print(buffer)
